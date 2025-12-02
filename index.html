@@ -4,258 +4,211 @@
 <meta charset="UTF-8">
 <title>Mega Sorte 🍀</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 body {
-    background: radial-gradient(circle at top, #1b5e20, #0d3015);
-    min-height: 100vh;
     margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle, #0b6623, #013220);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
-
 .card {
     background: #0f3d1e;
-    border-radius: 20px;
-    padding: 16px;
-    width: 360px;
-    max-width: 95vw;
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    padding: 15px;
+    box-sizing: border-box;
     color: white;
-    box-shadow: 0 0 20px #000;
+    display: flex;
+    flex-direction: column;
 }
-
 h1 {
     text-align: center;
-    margin: 6px 0 10px 0;
+    margin: 10px 0;
 }
-
-.grid {
+.info {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.fichas {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-    margin-top: 10px;
-    justify-items: center;
+    margin: 10px 0;
 }
-
-.num {
-    width: 55px;
-    height: 55px;
+.ficha {
+    background: radial-gradient(circle, #ff3b3b, #8b0000);
+    color: white;
     border-radius: 50%;
-    background: linear-gradient(145deg,#ffeb3b,#f9a825);
-    color: #222;
-    font-weight: bold;
-    font-size: 18px;
+    height: 58px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    font-weight: bold;
     cursor: pointer;
-    border: 2px solid #fff;
+    border: 2px solid gold;
     transition: 0.2s;
 }
-
-.num:hover {
+.ficha:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 8px #fff;
 }
-
-.num.active {
-    background: linear-gradient(145deg,#c62828,#b71c1c);
-    color: white;
+.ficha.selecionada {
+    background: radial-gradient(circle, #ffd700, #b8860b);
+    color: black;
 }
-
-.info {
-    margin-top: 10px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.inputs {
-    margin-top: 10px;
-}
-
-.inputs input {
+.dados input {
     width: 100%;
     padding: 10px;
-    margin-top: 6px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border: none;
+}
+.botao {
+    background: gold;
+    color: black;
+    padding: 12px;
     border-radius: 8px;
     border: none;
-}
-
-.btn {
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(145deg,#00c853,#00a843);
-    color: white;
-    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 8px;
 }
-
-.btn:disabled {
-    background: gray;
+.botao.verde {
+    background: #25d366;
 }
-
-.footer {
-    margin-top: 12px;
-    font-size: 12px;
+.valor {
+    margin: 8px 0;
+    font-size: 16px;
+    font-weight: bold;
     text-align: center;
-    color: #c8e6c9;
 }
-
-/* POPUP */
-.popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.popup-box {
-    background: white;
-    color: black;
-    padding: 20px;
-    border-radius: 15px;
-    width: 320px;
+.rodape {
+    margin-top: auto;
     text-align: center;
+    font-size: 13px;
+    margin-bottom: 5px;
 }
 </style>
 </head>
-
 <body>
 
 <div class="card">
-    <h1>Mega Sorte 🍀</h1>
+    <h1>🎰 MEGA SORTE 🍀</h1>
 
-    <div class="grid" id="grid"></div>
+    <div class="info">Escolha de 15 a 20 números</div>
 
-    <div class="info" id="contador">Selecionados: 0/20</div>
-    <div class="info" id="valor">Valor da Aposta: R$ 0,00</div>
+    <div class="fichas" id="fichas"></div>
 
-    <div class="inputs">
-        <input id="nome" placeholder="Nome do apostador">
-        <input id="whats" placeholder="WhatsApp">
-        <input id="pixpremio" placeholder="PIX para pagamento de premiação">
+    <div class="valor" id="valor">Valor da aposta: R$ 0,00</div>
+
+    <button class="botao" onclick="surpresinha()">🎲 Surpresinha</button>
+
+    <div class="dados">
+        <input id="nome" placeholder="Nome completo">
+        <input id="whatsapp" placeholder="WhatsApp">
+        <input id="pixPremio" placeholder="PIX para pagamento de premiação">
     </div>
 
-    <button class="btn" onclick="surpresinha()">🎲 Surpresinha</button>
-    <button class="btn" id="apostar" onclick="apostar()" disabled>APOSTAR</button>
+    <button class="botao verde" onclick="gerarMensagemFinal()">✅ APOSTAR</button>
 
-    <div class="footer">
+    <div class="rodape">
         PIX PARA PAGAMENTO DA APOSTA<br>
-        <b>(19) 98385-5676</b>
-    </div>
-</div>
-
-<!-- POPUP -->
-<div class="popup" id="popup">
-    <div class="popup-box">
-        <h3>Aposta Realizada!</h3>
-        <div id="dadosAposta"></div>
-        <p style="margin-top:10px">
-            Após realização do pagamento, envie o comprovante junto com a mensagem gerada da sua aposta para o WhatsApp:
-            <br><b>(19) 98271-4293</b>
-        </p>
-        <p><b>PIX PARA PAGAMENTO DA APOSTA:</b><br>19983855676</p>
-        <button class="btn" onclick="fechar()">OK</button>
+        <b>(19) 983855676</b>
     </div>
 </div>
 
 <script>
-const PRECOS = {15:5,16:8,17:10,18:15,19:30,20:100};
-let selecionados = [];
+const precos = {15:5,16:8,17:10,18:15,19:30,20:100};
+let numerosSelecionados = [];
 
-const grid = document.getElementById("grid");
-const contador = document.getElementById("contador");
-const valor = document.getElementById("valor");
-const apostarBtn = document.getElementById("apostar");
-
+const fichasDiv = document.getElementById("fichas");
 for(let i=1;i<=25;i++){
     const d = document.createElement("div");
-    d.className = "num";
+    d.className = "ficha";
     d.innerText = i;
-    d.onclick = ()=>toggle(i,d);
-    grid.appendChild(d);
+    d.onclick = () => selecionar(i,d);
+    fichasDiv.appendChild(d);
 }
 
-function toggle(n,el){
-    if(selecionados.includes(n)){
-        selecionados = selecionados.filter(x=>x!==n);
-        el.classList.remove("active");
+function selecionar(num, el){
+    if(numerosSelecionados.includes(num)){
+        numerosSelecionados = numerosSelecionados.filter(n=>n!==num);
+        el.classList.remove("selecionada");
     } else {
-        if(selecionados.length < 20){
-            selecionados.push(n);
-            el.classList.add("active");
+        if(numerosSelecionados.length >= 20){
+            alert("Máximo 20 números");
+            return;
         }
+        numerosSelecionados.push(num);
+        el.classList.add("selecionada");
     }
-    atualizar();
+    atualizarValor();
 }
 
-function atualizar(){
-    contador.innerText = `Selecionados: ${selecionados.length}/20`;
-    if(selecionados.length>=15){
-        let v = PRECOS[selecionados.length];
-        valor.innerText = `Valor da Aposta: R$ ${v.toFixed(2)}`;
-        apostarBtn.disabled = false;
-    } else {
-        valor.innerText = "Valor da Aposta: R$ 0,00";
-        apostarBtn.disabled = true;
-    }
+function atualizarValor(){
+    const qtd = numerosSelecionados.length;
+    let valor = precos[qtd] || 0;
+    document.getElementById("valor").innerText =
+        "Valor da aposta: R$ " + valor.toFixed(2);
 }
 
 function surpresinha(){
-    document.querySelectorAll(".num").forEach(n=>n.classList.remove("active"));
-    selecionados = [];
-    while(selecionados.length < 15){
-        let r = Math.floor(Math.random()*25)+1;
-        if(!selecionados.includes(r)){
-            selecionados.push(r);
-        }
+    numerosSelecionados = [];
+    document.querySelectorAll(".ficha").forEach(f=>f.classList.remove("selecionada"));
+
+    const sorteados = [];
+    while(sorteados.length < 15){
+        const n = Math.floor(Math.random()*25)+1;
+        if(!sorteados.includes(n)) sorteados.push(n);
     }
-    document.querySelectorAll(".num").forEach((el,i)=>{
-        if(selecionados.includes(i+1)) el.classList.add("active");
+    sorteados.forEach(n=>{
+        numerosSelecionados.push(n);
+        document.querySelectorAll(".ficha")[n-1].classList.add("selecionada");
     });
-    atualizar();
+    atualizarValor();
 }
 
-function apostar(){
-    let nome = document.getElementById("nome").value;
-    let whats = document.getElementById("whats").value;
-    let pix = document.getElementById("pixpremio").value;
+function gerarMensagemFinal(){
+    const nome = document.getElementById("nome").value.trim();
+    const whatsapp = document.getElementById("whatsapp").value.trim();
+    const pixPremio = document.getElementById("pixPremio").value.trim();
 
-    if(!nome || !whats || !pix){
-        alert("Preencha todos os dados!");
+    if(!nome || !whatsapp || !pixPremio || numerosSelecionados.length < 15){
+        alert("Preencha todos os dados e escolha no mínimo 15 números.");
         return;
     }
 
-    document.getElementById("dadosAposta").innerHTML = `
-        <p><b>Nome:</b> ${nome}</p>
-        <p><b>WhatsApp:</b> ${whats}</p>
-        <p><b>PIX para premiação:</b> ${pix}</p>
-        <p><b>Números:</b> ${selecionados.join(", ")}</p>
-    `;
+    const qtd = numerosSelecionados.length;
+    const valor = precos[qtd];
 
-    document.getElementById("popup").style.display="flex";
-}
+    const mensagem =
+`🎰 APOSTA REALIZADA 🎰
 
-function fechar(){
-    document.getElementById("popup").style.display="none";
-    selecionados=[];
-    document.querySelectorAll(".num").forEach(n=>n.classList.remove("active"));
-    document.getElementById("nome").value="";
-    document.getElementById("whats").value="";
-    document.getElementById("pixpremio").value="";
-    atualizar();
+👤 Nome: ${nome}
+📱 WhatsApp: ${whatsapp}
+💸 PIX para premiação: ${pixPremio}
+
+🎯 Números escolhidos:
+${numerosSelecionados.join(", ")}
+
+💰 Valor da aposta: R$ ${valor.toFixed(2)}
+
+✅ Após realizar o pagamento, envie:
+• Esta mensagem
+• O comprovante do PIX
+
+📌 Enviar para:
+WhatsApp: (19) 98271-4293
+PIX para pagamento da aposta: 19983855676
+`;
+
+    alert(mensagem);
+
+    const link = `https://wa.me/5519982714293?text=${encodeURIComponent(mensagem)}`;
+    window.open(link, "_blank");
 }
 </script>
 
