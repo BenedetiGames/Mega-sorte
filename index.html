@@ -2,187 +2,262 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mega Sorte 🍀</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #006400; /* verde mesa de jogo */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-    .container {
-        width: 95vw;
-        max-width: 400px;
-        background-color: #004d00;
-        padding: 3vw;
-        border-radius: 1.5vw;
-        box-shadow: 0 0 1vw #000;
-        text-align: center;
-        color: #fff;
-    }
-    h1 {
-        margin-top: 0;
-        font-size: clamp(18px, 6vw, 36px);
-    }
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 0.5em;
-        justify-items: center;
-        margin-bottom: 1em;
-    }
-    .number {
-        width: clamp(40px, 12vw, 60px);
-        height: clamp(40px, 12vw, 60px);
-        background-color: #ffcc00;
-        border: 2px solid #fff;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: clamp(14px, 4vw, 20px);
-        cursor: pointer;
-        transition: transform 0.2s, background 0.2s;
-        user-select: none;
-    }
-    .number:hover {
-        transform: scale(1.1);
-        background-color: #ffd700;
-    }
-    .selected {
-        background-color: red !important;
-    }
-    input[type="text"] {
-        width: 90%;
-        padding: 0.5em;
-        margin: 0.5em 0;
-        border-radius: 0.5em;
-        border: none;
-        font-size: clamp(12px, 4vw, 18px);
-        box-sizing: border-box;
-    }
-    .button {
-        background-color: green;
-        color: white;
-        border: none;
-        padding: 0.7em 0;
-        width: 100%;
-        border-radius: 0.5em;
-        font-size: clamp(14px, 4vw, 18px);
-        cursor: pointer;
-        margin: 0.5em 0;
-        transition: background 0.2s;
-    }
-    .button:hover {
-        background-color: #00cc00;
-    }
-    .info {
-        margin-top: 1em;
-        font-size: clamp(12px, 4vw, 16px);
-    }
-    .footer {
-        margin-top: 1.5em;
-        font-size: clamp(10px, 3.5vw, 14px);
-        color: #fff;
-    }
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, #1b5e20, #0d3015);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background: #0f3d1e;
+    border-radius: 20px;
+    padding: 16px;
+    width: 360px;
+    max-width: 95vw;
+    color: white;
+    box-shadow: 0 0 20px #000;
+}
+
+h1 {
+    text-align: center;
+    margin: 6px 0 10px 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+    justify-items: center;
+}
+
+.num {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(145deg,#ffeb3b,#f9a825);
+    color: #222;
+    font-weight: bold;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #fff;
+    transition: 0.2s;
+}
+
+.num:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px #fff;
+}
+
+.num.active {
+    background: linear-gradient(145deg,#c62828,#b71c1c);
+    color: white;
+}
+
+.info {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.inputs {
+    margin-top: 10px;
+}
+
+.inputs input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: none;
+}
+
+.btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(145deg,#00c853,#00a843);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    background: gray;
+}
+
+.footer {
+    margin-top: 12px;
+    font-size: 12px;
+    text-align: center;
+    color: #c8e6c9;
+}
+
+/* POPUP */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-box {
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+}
 </style>
 </head>
+
 <body>
-<div class="container">
+
+<div class="card">
     <h1>Mega Sorte 🍀</h1>
-    <div class="grid" id="grid">
-        <!-- Números gerados pelo JS -->
+
+    <div class="grid" id="grid"></div>
+
+    <div class="info" id="contador">Selecionados: 0/20</div>
+    <div class="info" id="valor">Valor da Aposta: R$ 0,00</div>
+
+    <div class="inputs">
+        <input id="nome" placeholder="Nome do apostador">
+        <input id="whats" placeholder="WhatsApp">
+        <input id="pixpremio" placeholder="PIX para pagamento de premiação">
     </div>
 
-    <button class="button" id="surpresinha">🎲 Surpresinha</button>
-
-    <div class="info">
-        <input type="text" id="nome" placeholder="Nome do jogador">
-        <input type="text" id="whatsapp" placeholder="WhatsApp do jogador">
-        <input type="text" id="pix" placeholder="pix para pagamento de premiação">
-        <div id="valorAposta">Valor da Aposta: R$ 0,00</div>
-    </div>
-
-    <button class="button" id="apostar">Apostar</button>
+    <button class="btn" onclick="surpresinha()">🎲 Surpresinha</button>
+    <button class="btn" id="apostar" onclick="apostar()" disabled>APOSTAR</button>
 
     <div class="footer">
-        PIX PARA PAGAMENTO DA APOSTA (19) 983855676
+        PIX PARA PAGAMENTO DA APOSTA<br>
+        <b>(19) 98385-5676</b>
+    </div>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+    <div class="popup-box">
+        <h3>Aposta Realizada!</h3>
+        <div id="dadosAposta"></div>
+        <p style="margin-top:10px">
+            Após realização do pagamento, envie o comprovante junto com a mensagem gerada da sua aposta para o WhatsApp:
+            <br><b>(19) 98271-4293</b>
+        </p>
+        <p><b>PIX PARA PAGAMENTO DA APOSTA:</b><br>19983855676</p>
+        <button class="btn" onclick="fechar()">OK</button>
     </div>
 </div>
 
 <script>
-const PRECOS = {15: 5, 16: 8, 17: 10, 18: 15, 19: 30, 20: 100};
+const PRECOS = {15:5,16:8,17:10,18:15,19:30,20:100};
 let selecionados = [];
 
-const grid = document.getElementById('grid');
-for(let i=1; i<=25; i++){
-    const div = document.createElement('div');
-    div.classList.add('number');
-    div.textContent = i;
-    div.addEventListener('click', ()=>selecionar(i, div));
-    grid.appendChild(div);
+const grid = document.getElementById("grid");
+const contador = document.getElementById("contador");
+const valor = document.getElementById("valor");
+const apostarBtn = document.getElementById("apostar");
+
+for(let i=1;i<=25;i++){
+    const d = document.createElement("div");
+    d.className = "num";
+    d.innerText = i;
+    d.onclick = ()=>toggle(i,d);
+    grid.appendChild(d);
 }
 
-function selecionar(num, elem){
-    const index = selecionados.indexOf(num);
-    if(index>-1){
-        selecionados.splice(index,1);
-        elem.classList.remove('selected');
+function toggle(n,el){
+    if(selecionados.includes(n)){
+        selecionados = selecionados.filter(x=>x!==n);
+        el.classList.remove("active");
     } else {
-        if(selecionados.length<20){
-            selecionados.push(num);
-            elem.classList.add('selected');
+        if(selecionados.length < 20){
+            selecionados.push(n);
+            el.classList.add("active");
         }
     }
-    atualizarValor();
+    atualizar();
 }
 
-function gerarSurpresinha(){
-    selecionados = [];
-    const numeros = Array.from({length:25},(_,i)=>i+1);
-    numeros.sort(()=>0.5-Math.random());
-    const escolha = numeros.slice(0,15);
-    const todosBotoes = document.querySelectorAll('.number');
-    todosBotoes.forEach(b=>b.classList.remove('selected'));
-    escolha.forEach(n=>{
-        selecionados.push(n);
-        todosBotoes[n-1].classList.add('selected');
-    });
-    atualizarValor();
-}
-
-function atualizarValor(){
-    const qtd = selecionados.length;
-    let valor = 0;
-    if(qtd>=15 && qtd<=20){
-        valor = PRECOS[qtd];
+function atualizar(){
+    contador.innerText = `Selecionados: ${selecionados.length}/20`;
+    if(selecionados.length>=15){
+        let v = PRECOS[selecionados.length];
+        valor.innerText = `Valor da Aposta: R$ ${v.toFixed(2)}`;
+        apostarBtn.disabled = false;
+    } else {
+        valor.innerText = "Valor da Aposta: R$ 0,00";
+        apostarBtn.disabled = true;
     }
-    document.getElementById('valorAposta').textContent = "Valor da Aposta: R$ " + valor.toFixed(2);
+}
+
+function surpresinha(){
+    document.querySelectorAll(".num").forEach(n=>n.classList.remove("active"));
+    selecionados = [];
+    while(selecionados.length < 15){
+        let r = Math.floor(Math.random()*25)+1;
+        if(!selecionados.includes(r)){
+            selecionados.push(r);
+        }
+    }
+    document.querySelectorAll(".num").forEach((el,i)=>{
+        if(selecionados.includes(i+1)) el.classList.add("active");
+    });
+    atualizar();
 }
 
 function apostar(){
-    const nome = document.getElementById('nome').value.trim();
-    const whatsapp = document.getElementById('whatsapp').value.trim();
-    if(!nome || !whatsapp || selecionados.length<15){
-        alert("Preencha nome, WhatsApp e selecione pelo menos 15 números!");
+    let nome = document.getElementById("nome").value;
+    let whats = document.getElementById("whats").value;
+    let pix = document.getElementById("pixpremio").value;
+
+    if(!nome || !whats || !pix){
+        alert("Preencha todos os dados!");
         return;
     }
-    const valor = document.getElementById('valorAposta').textContent.split('R$ ')[1];
-    alert(`Aposta Realizada!\nApós realização do pagamento, envie o comprovante junto com a mensagem da sua aposta para o Whatsapp (19982714293)\nPIX para pagamento da aposta: 19983855676\n\nValor: R$ ${valor}\nNúmeros: ${selecionados.join(', ')}`);
-    selecionados = [];
-    document.querySelectorAll('.number').forEach(b=>b.classList.remove('selected'));
-    document.getElementById('nome').value = "";
-    document.getElementById('whatsapp').value = "";
-    document.getElementById('pix').value = "";
-    atualizarValor();
+
+    document.getElementById("dadosAposta").innerHTML = `
+        <p><b>Nome:</b> ${nome}</p>
+        <p><b>WhatsApp:</b> ${whats}</p>
+        <p><b>PIX para premiação:</b> ${pix}</p>
+        <p><b>Números:</b> ${selecionados.join(", ")}</p>
+    `;
+
+    document.getElementById("popup").style.display="flex";
 }
 
-document.getElementById('surpresinha').addEventListener('click', gerarSurpresinha);
-document.getElementById('apostar').addEventListener('click', apostar);
+function fechar(){
+    document.getElementById("popup").style.display="none";
+    selecionados=[];
+    document.querySelectorAll(".num").forEach(n=>n.classList.remove("active"));
+    document.getElementById("nome").value="";
+    document.getElementById("whats").value="";
+    document.getElementById("pixpremio").value="";
+    atualizar();
+}
 </script>
+
 </body>
 </html>
