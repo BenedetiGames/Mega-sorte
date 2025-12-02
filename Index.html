@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mega Sorte 🍀</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #006400; /* verde mesa de jogo */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .container {
+        width: 95vw;
+        max-width: 400px;
+        background-color: #004d00;
+        padding: 3vw;
+        border-radius: 1.5vw;
+        box-shadow: 0 0 1vw #000;
+        text-align: center;
+        color: #fff;
+    }
+    h1 {
+        margin-top: 0;
+        font-size: clamp(18px, 6vw, 36px);
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5em;
+        justify-items: center;
+        margin-bottom: 1em;
+    }
+    .number {
+        width: clamp(40px, 12vw, 60px);
+        height: clamp(40px, 12vw, 60px);
+        background-color: #ffcc00;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: clamp(14px, 4vw, 20px);
+        cursor: pointer;
+        transition: transform 0.2s, background 0.2s;
+        user-select: none;
+    }
+    .number:hover {
+        transform: scale(1.1);
+        background-color: #ffd700;
+    }
+    .selected {
+        background-color: red !important;
+    }
+    input[type="text"] {
+        width: 90%;
+        padding: 0.5em;
+        margin: 0.5em 0;
+        border-radius: 0.5em;
+        border: none;
+        font-size: clamp(12px, 4vw, 18px);
+        box-sizing: border-box;
+    }
+    .button {
+        background-color: green;
+        color: white;
+        border: none;
+        padding: 0.7em 0;
+        width: 100%;
+        border-radius: 0.5em;
+        font-size: clamp(14px, 4vw, 18px);
+        cursor: pointer;
+        margin: 0.5em 0;
+        transition: background 0.2s;
+    }
+    .button:hover {
+        background-color: #00cc00;
+    }
+    .info {
+        margin-top: 1em;
+        font-size: clamp(12px, 4vw, 16px);
+    }
+    .footer {
+        margin-top: 1.5em;
+        font-size: clamp(10px, 3.5vw, 14px);
+        color: #fff;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Mega Sorte 🍀</h1>
+    <div class="grid" id="grid">
+        <!-- Números gerados pelo JS -->
+    </div>
+
+    <button class="button" id="surpresinha">🎲 Surpresinha</button>
+
+    <div class="info">
+        <input type="text" id="nome" placeholder="Nome do jogador">
+        <input type="text" id="whatsapp" placeholder="WhatsApp do jogador">
+        <input type="text" id="pix" placeholder="pix para pagamento de premiação">
+        <div id="valorAposta">Valor da Aposta: R$ 0,00</div>
+    </div>
+
+    <button class="button" id="apostar">Apostar</button>
+
+    <div class="footer">
+        PIX PARA PAGAMENTO DA APOSTA (19) 983855676
+    </div>
+</div>
+
+<script>
+const PRECOS = {15: 5, 16: 8, 17: 10, 18: 15, 19: 30, 20: 100};
+let selecionados = [];
+
+const grid = document.getElementById('grid');
+for(let i=1; i<=25; i++){
+    const div = document.createElement('div');
+    div.classList.add('number');
+    div.textContent = i;
+    div.addEventListener('click', ()=>selecionar(i, div));
+    grid.appendChild(div);
+}
+
+function selecionar(num, elem){
+    const index = selecionados.indexOf(num);
+    if(index>-1){
+        selecionados.splice(index,1);
+        elem.classList.remove('selected');
+    } else {
+        if(selecionados.length<20){
+            selecionados.push(num);
+            elem.classList.add('selected');
+        }
+    }
+    atualizarValor();
+}
+
+function gerarSurpresinha(){
+    selecionados = [];
+    const numeros = Array.from({length:25},(_,i)=>i+1);
+    numeros.sort(()=>0.5-Math.random());
+    const escolha = numeros.slice(0,15);
+    const todosBotoes = document.querySelectorAll('.number');
+    todosBotoes.forEach(b=>b.classList.remove('selected'));
+    escolha.forEach(n=>{
+        selecionados.push(n);
+        todosBotoes[n-1].classList.add('selected');
+    });
+    atualizarValor();
+}
+
+function atualizarValor(){
+    const qtd = selecionados.length;
+    let valor = 0;
+    if(qtd>=15 && qtd<=20){
+        valor = PRECOS[qtd];
+    }
+    document.getElementById('valorAposta').textContent = "Valor da Aposta: R$ " + valor.toFixed(2);
+}
+
+function apostar(){
+    const nome = document.getElementById('nome').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    if(!nome || !whatsapp || selecionados.length<15){
+        alert("Preencha nome, WhatsApp e selecione pelo menos 15 números!");
+        return;
+    }
+    const valor = document.getElementById('valorAposta').textContent.split('R$ ')[1];
+    alert(`Aposta Realizada!\nApós realização do pagamento, envie o comprovante junto com a mensagem da sua aposta para o Whatsapp (19982714293)\nPIX para pagamento da aposta: 19983855676\n\nValor: R$ ${valor}\nNúmeros: ${selecionados.join(', ')}`);
+    selecionados = [];
+    document.querySelectorAll('.number').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('nome').value = "";
+    document.getElementById('whatsapp').value = "";
+    document.getElementById('pix').value = "";
+    atualizarValor();
+}
+
+document.getElementById('surpresinha').addEventListener('click', gerarSurpresinha);
+document.getElementById('apostar').addEventListener('click', apostar);
+</script>
+</body>
+</html>
